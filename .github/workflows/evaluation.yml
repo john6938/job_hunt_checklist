@@ -44,13 +44,21 @@ jobs:
             max_score=$((max_score + s))
           done
 
-         if [ "$max_score" -eq 0 ]; then
+          echo "DEBUG: total_score = $total_score"
+          echo "DEBUG: max_score = $max_score"
+
+          if [ "$max_score" -eq 0 ]; then
             percentage=0
             echo "WARNING: Max score is 0 — setting percentage to 0."
           else
-              percentage=$((total_score * 100 / max_score))
+            percentage=$((total_score * 100 / max_score))
           fi
 
+          echo "Score Percentage: $percentage%"
+
+          echo "::set-output name=total::$total_score"
+          echo "::set-output name=max::$max_score"
+          echo "::set-output name=percentage::$percentage"
 
       - name: Save Summary
         run: |
@@ -58,6 +66,3 @@ jobs:
           echo "- Total Score: ${{ steps.evaluate.outputs.total }}" >> $GITHUB_STEP_SUMMARY
           echo "- Maximum Score: ${{ steps.evaluate.outputs.max }}" >> $GITHUB_STEP_SUMMARY
           echo "- Score Percentage: ${{ steps.evaluate.outputs.percentage }}%" >> $GITHUB_STEP_SUMMARY
-
-    "DEBUG: total_score = $total_score"
-    echo "DEBUG: max_score = $max_score"
